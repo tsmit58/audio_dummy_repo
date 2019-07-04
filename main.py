@@ -1,3 +1,7 @@
+import tensorflow
+import keras
+import numpy as np
+import librosa
 #import LivePredictions_CHOPPED as LP
 import os
 from flask import Flask, flash, request, jsonify, redirect,render_template, Response, url_for
@@ -11,8 +15,18 @@ import sys
 #from flask_cors import CORS, cross_origin
 UPLOAD_FOLDER = './'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'wav'])
-
-
+speech_model = keras.models.load_model('./Emotion_Voice_Detection_Model.h5')
+# What if file.wav isn't there or corrupted??? Create some kind of routine or backup wav file 
+# to replace a corrupted or missing wav
+data, sampling_rate = librosa.load('./file.wav')
+mfccs = np.mean(librosa.feature.mfcc(y=data, sr=sampling_rate, n_mfcc=40).T, axis=0)
+x = np.expand_dims(mfccs, axis=2)
+x = np.expand_dims(x, axis=0)
+pred = str(speech_model.predict_classes(x))
+#Emotion_prediction = str(speech_model.predict(x))
+#pred = LP.livePredictions(path='./Emotion_Voice_Detection_Model.h5', file='./file.wav')
+#pred.load_model()
+#data = str(pred.makepredictions())
 app = Flask(__name__)
 #CORS(app)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -31,11 +45,46 @@ def api_message():
 		f = open('./file.wav', 'wb')
 		f.write(request.data)
 		f.close()
-	Emotion = os.popen('python3 LivePredictions.py').read()
+	#Emotion = os.popen('python3 LivePredictions.py').read()
+	data, sampling_rate = librosa.load('./file.wav')
+	mfccs = np.mean(librosa.feature.mfcc(y=data, sr=sampling_rate, n_mfcc=40).T, axis=0)
+	x = np.expand_dims(mfccs, axis=2)
+	x = np.expand_dims(x, axis=0)
+	pred = str(speech_model.predict_classes(x))
+	if pred == "[0]":
+		pred = "neutral"
+		
+	elif pred == "[1]":
+		pred = "calm"
+		
+	elif pred == "[2]":
+		pred = "happy"
+		
+	elif pred == "[3]":
+		pred = "sad"
+		
+	elif pred == "[4]":
+		pred = "angry"
+		
+	elif pred == "[5]":
+		pred = "fearful"
+		
+	elif pred == "[6]":
+		pred = "disgust"
+		
+	elif pred == "[7]":
+		pred = "surprised"
+		
+	
+	#Emotion_prediction = str(speech_model.predict(x))
 	#pred = LP.livePredictions(path='./Emotion_Voice_Detection_Model.h5', file='./file.wav')
 	#pred.load_model()
-	#data = str(pred.makepredictions())
-	return jsonify(Emotion)
+	#data2 = str(pred.makepredictions())
+	#data2 = str(pred.makepredictions())
+	#return jsonify(data2)
+	#return jsonify(Emotion)
+	return jsonify(pred)
+	#return jsonify(Emotion_prediction)
 	#return "dummy"
 
 @app.route('/profile/<username>')
