@@ -72,8 +72,8 @@ async function stopRecording() {
     .then((out) => {
 		AUDIO_EMOTION_JSON = out;
  }).catch(err => console.error(err));
- EMOTION.textContent = AUDIO_EMOTION_JSON
- console.log(AUDIO_EMOTION_JSON);
+  EMOTION.textContent = AUDIO_EMOTION_JSON
+ await console.log(AUDIO_EMOTION_JSON);
 }
 function sendData(blob) {
   // sends data to flask url /messages as a post with data blob - in format for wav file, hopefully. it is a promise
@@ -92,8 +92,8 @@ function wait(ms){
     end = new Date().getTime();
  }
 }
-recordButton.click();
-  
+//recordButton.click();
+
 //window.onload = async function(){
 //  await wait(5000);
   //await wait(5000);
@@ -103,12 +103,21 @@ recordButton.click();
   
 //}
 
-setTimeout(async function(){ 
+
+
+Clip_Time = 3000;   // 3000 ms = 3 seconds
+
+//getSpeechEmotion();
+
+//getSpeechEmotion();
+recordButton.click();
+wait(1000);
+setTimeout(async function dummy(){ 
   
-  await wait(5000);
+  //await wait(1000);
   
   await stopButton.click(); 
-
-}, 3000);
-
-  
+  await wait(1000); // allow  a one second delay for emotion analysis
+  await recordButton.click();
+  setTimeout(dummy, Clip_Time);
+}, 3000)
