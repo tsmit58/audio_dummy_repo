@@ -1,6 +1,9 @@
 //webkitURL is deprecated but nevertheless
 URL = window.URL || window.webkitURL;
 var AUDIO_EMOTION_JSON;
+var AUDIO_EMOTION_float;
+var AUDIO_EMOTION_float_moving_LIST;
+var AUDIO_EMOTION_float_moving_AVG;
 var gumStream; //stream from getUserMedia()
 var rec; //Recorder.js object
 var input; //MediaStreamAudioSourceNode we'll be recording
@@ -71,8 +74,9 @@ async function stopRecording() {
     .then(res => res.json())
     .then((out) => {
 		AUDIO_EMOTION_JSON = out;
- }).catch(err => console.error(err));
-  EMOTION.textContent = AUDIO_EMOTION_JSON
+    AUDIO_EMOTION_float = parseFloat(AUDIO_EMOTION_JSON);
+  }).catch(err => console.error(err));
+  EMOTION.textContent = AUDIO_EMOTION_float
  //await console.log(AUDIO_EMOTION_JSON);
 }
 function sendData(blob) {
