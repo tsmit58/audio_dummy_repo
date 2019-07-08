@@ -39,7 +39,7 @@ async function startRecording() {
       await rec.record();
       
       await console.log("Recording started");
-      await console.log(rec);
+      //await console.log(rec);
       
     })
     .catch(function(err) {
@@ -62,7 +62,7 @@ async function stopRecording() {
   stopButton.disabled = true;
   recordButton.disabled = false;
   await rec.stop();
-  await console.log(rec.exportWAV);
+  //await console.log(rec.exportWAV);
   //stop microphone access
   await gumStream.getAudioTracks()[0].stop();
   await rec.exportWAV(sendData);
@@ -73,7 +73,7 @@ async function stopRecording() {
 		AUDIO_EMOTION_JSON = out;
  }).catch(err => console.error(err));
   EMOTION.textContent = AUDIO_EMOTION_JSON
- await console.log(AUDIO_EMOTION_JSON);
+ //await console.log(AUDIO_EMOTION_JSON);
 }
 function sendData(blob) {
   // sends data to flask url /messages as a post with data blob - in format for wav file, hopefully. it is a promise
@@ -105,19 +105,19 @@ function wait(ms){
 
 
 
-Clip_Time = 3000;   // 3000 ms = 3 seconds
+Clip_Time = 5000;   // 3000 ms = 3 seconds
 
 //getSpeechEmotion();
 
 //getSpeechEmotion();
-recordButton.click();
-wait(1000);
+//recordButton.click();
+//wait(100); //
 setTimeout(async function dummy(){ 
   
   //await wait(1000);
   
   await stopButton.click(); 
-  await wait(1000); // allow  a one second delay for emotion analysis
+  //await wait(1000); // allow  a one second delay for emotion analysis
   await recordButton.click();
   setTimeout(dummy, Clip_Time);
-}, 3000)
+}, Clip_Time)

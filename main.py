@@ -23,6 +23,7 @@ mfccs = np.mean(librosa.feature.mfcc(y=data, sr=sampling_rate, n_mfcc=40).T, axi
 x = np.expand_dims(mfccs, axis=2)
 x = np.expand_dims(x, axis=0)
 pred = str(speech_model.predict_classes(x))
+pred2 = str(speech_model.predict(x))
 #Emotion_prediction = str(speech_model.predict(x))
 #pred = LP.livePredictions(path='./Emotion_Voice_Detection_Model.h5', file='./file.wav')
 #pred.load_model()
@@ -51,6 +52,7 @@ def api_message():
 	x = np.expand_dims(mfccs, axis=2)
 	x = np.expand_dims(x, axis=0)
 	pred = str(speech_model.predict_classes(x))
+	pred2 = str(speech_model.predict(x))
 	if pred == "[0]":
 		pred = "neutral"
 		
@@ -83,7 +85,7 @@ def api_message():
 	#data2 = str(pred.makepredictions())
 	#return jsonify(data2)
 	#return jsonify(Emotion)
-	return jsonify(pred)
+	return jsonify(pred, pred2)
 	#return jsonify(Emotion_prediction)
 	#return "dummy"
 
