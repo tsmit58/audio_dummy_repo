@@ -18,6 +18,8 @@ ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'wav'])
 speech_model = keras.models.load_model('./Emotion_Voice_Detection_Model.h5')
 # What if file.wav isn't there or corrupted??? Create some kind of routine or backup wav file 
 # to replace a corrupted or missing wav
+Speech_Activation_Detection = os.popen('python3 detectVoiceInWave.py ./file.wav ./results.json').read()
+SAD_float = float(Speech_Activation_Detection)
 data, sampling_rate = librosa.load('./file.wav')
 mfccs = np.mean(librosa.feature.mfcc(y=data, sr=sampling_rate, n_mfcc=40).T, axis=0)
 x = np.expand_dims(mfccs, axis=2)
@@ -47,7 +49,8 @@ def api_message():
 		f = open('./file.wav', 'wb')
 		f.write(request.data)
 		f.close()
-	#Emotion = os.popen('python3 LivePredictions.py').read()
+	Speech_Activation_Detection = os.popen('python3 detectVoiceInWave.py ./file.wav ./results.json').read()
+	SAD_float = float(Speech_Activation_Detection)
 	data, sampling_rate = librosa.load('./file.wav')
 	mfccs = np.mean(librosa.feature.mfcc(y=data, sr=sampling_rate, n_mfcc=40).T, axis=0)
 	x = np.expand_dims(mfccs, axis=2)
@@ -56,6 +59,9 @@ def api_message():
 	pred_vec = speech_model.predict(x)
 	dummy_string = "Total speech negativity score is "
 	pred2 = str(pred_vec[0][3] + pred_vec[0][4]+ pred_vec[0][5]+ pred_vec[0][6])
+	if SAD_float < .1:
+		pred2 = "0"
+	
 	if pred == "[0]":
 		pred = "neutral"
 		

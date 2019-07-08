@@ -26,7 +26,7 @@ async function startRecording() {
         "getUserMedia() success, stream created, initializing Recorder.js ..."
       );
       audioContext = new AudioContext();
-
+      
       document.getElementById("formats").innerHTML =
         "Format: 1 channel pcm @ " + audioContext.sampleRate / 1000 + "kHz";
 
