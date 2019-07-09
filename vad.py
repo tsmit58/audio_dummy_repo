@@ -11,7 +11,7 @@ class VoiceActivityDetector():
         self.sample_window = 0.02 #20 ms
         self.sample_overlap = 0.01 #10ms
         self.speech_window = 0.5 #half a second
-        self.speech_energy_threshold = 0.60 #60% of energy in voice band
+        self.speech_energy_threshold = 0.45 #60% of energy in voice band
         self.speech_start_band = 300
         self.speech_end_band = 3000
            
@@ -114,7 +114,8 @@ class VoiceActivityDetector():
                 #print(window[0], speech_time_end)
                 Time_Count += speech_time_end
         print(Time_Count)
-        return speech_time
+        return Time_Count
+        #return speech_time
       
     def plot_detected_speech_regions(self):
         """ Performs speech detection and plot original signal and speech regions.

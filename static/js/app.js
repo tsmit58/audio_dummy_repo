@@ -116,12 +116,37 @@ Clip_Time = 5000;   // 3000 ms = 3 seconds
 //getSpeechEmotion();
 //recordButton.click();
 //wait(100); //
+//setTimeout(async function dummy(){ 
+  
+  //await wait(1000);
+  
+ // await stopButton.click(); 
+ // await wait(1000); // allow  a 1 second delay for emotion analysis
+ // await recordButton.click();
+ // setTimeout(dummy, Clip_Time);
+//}, Clip_Time)
+
 setTimeout(async function dummy(){ 
+  
+  
+  dummy1();
+}, 0)
+
+
+
+async function dummy1(){ 
+  await recordButton.click();
+  //await wait(1000);
+  
+  
+  setTimeout(dummy2, Clip_Time);
+}
+
+async function dummy2(){ 
   
   //await wait(1000);
   
   await stopButton.click(); 
-  //await wait(1000); // allow  a one second delay for emotion analysis
-  await recordButton.click();
-  setTimeout(dummy, Clip_Time);
-}, Clip_Time)
+  
+  setTimeout(dummy1, 1000);
+}
