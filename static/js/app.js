@@ -5,20 +5,15 @@ var AUDIO_EMOTION_float;
 var AUDIO_EMOTION_float_moving_LIST;
 var AUDIO_EMOTION_float_moving_AVG;
 var gumStream; //stream from getUserMedia()
-var rec; //Recorder.js object
+var rec_audio; //Recorder.js object
 var input; //MediaStreamAudioSourceNode we'll be recording
 var AudioContext = window.AudioContext || window.webkitAudioContext;
 var audioContext; //audio context to help us record
 var recordButton = document.getElementById("recordButton");
 var stopButton = document.getElementById("stopButton");
 var EMOTION = document.querySelector("#Emotion-Result");
-recordButton.addEventListener("click", startRecording);
-stopButton.addEventListener("click", stopRecording);
-async function startRecording() {
-  console.log("recordButton clicked");
+async function startAudioRecording() {
   var constraints = { audio: true, video: false };
-  recordButton.disabled = true;
-  stopButton.disabled = false;
   await navigator.mediaDevices
     .getUserMedia(constraints)
     .then(async function(stream) {
@@ -36,10 +31,10 @@ async function startRecording() {
       /* use the stream */
       input = audioContext.createMediaStreamSource(stream);
 
-      rec = new Recorder(input, { numChannels: 1 });
+      rec_audio = new Recorder(input, { numChannels: 1 });
 
       //start the recording process
-      await rec.record();
+      await rec_audio.record();
       
       await console.log("Recording started");
       //await console.log(rec);
@@ -58,17 +53,16 @@ async function startRecording() {
 
 
 
-async function stopRecording() {
-  console.log("stopButton clicked");
+async function stopAudioRecording() {
+  
 
   //disable the stop button, enable the record too allow for new recordings
-  stopButton.disabled = true;
-  recordButton.disabled = false;
-  await rec.stop();
-  //await console.log(rec.exportWAV);
+  
+  await rec_audio.stop();
+  
   //stop microphone access
   await gumStream.getAudioTracks()[0].stop();
-  await rec.exportWAV(sendData);
+  await rec_audio.exportWAV(sendData);
  
  await fetch('/messages')
     .then(res => res.json())
@@ -96,35 +90,13 @@ function wait(ms){
     end = new Date().getTime();
  }
 }
-//recordButton.click();
 
-//window.onload = async function(){
-//  await wait(5000);
-  //await wait(5000);
-  
-//  await stopButton.click();
-  //await console.log(rec);
-  
-//}
 
 
 
 Clip_Time = 5000;   // 3000 ms = 3 seconds
 
-//getSpeechEmotion();
 
-//getSpeechEmotion();
-//recordButton.click();
-//wait(100); //
-//setTimeout(async function dummy(){ 
-  
-  //await wait(1000);
-  
- // await stopButton.click(); 
- // await wait(1000); // allow  a 1 second delay for emotion analysis
- // await recordButton.click();
- // setTimeout(dummy, Clip_Time);
-//}, Clip_Time)
 
 setTimeout(async function dummy(){ 
   
@@ -135,7 +107,7 @@ setTimeout(async function dummy(){
 
 
 async function dummy1(){ 
-  await recordButton.click();
+  await startAudioRecording();//recordButton.click();
   //await wait(1000);
   
   
@@ -146,7 +118,7 @@ async function dummy2(){
   
   //await wait(1000);
   
-  await stopButton.click(); 
+  await stopAudioRecording();//stopButton.click(); 
   
   setTimeout(dummy1, 1000);
 }
